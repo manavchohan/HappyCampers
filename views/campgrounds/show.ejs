@@ -1,0 +1,243 @@
+<% layout('layouts/boilerplate') %>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<link rel="stylesheet" href="/stylesheets/star.css">
+
+    <div class="container bg-light px-3 px-sm-5 my-4 pb-4">
+
+        <h1 class="text-center text-uppercase lh-base" style="text-shadow: 2px 1px 3px rgb(175, 173, 173);">
+            <%= campground.title %>
+        </h1>
+        <p class="lead ppp lh-base fs-5 text-sm-left text-center overflow-hidden">
+            <%= campground.description %>
+        </p>
+        <div class="row py-2">
+            <div class="col-12 col-lg-6">
+                <div class="table-responsive">
+                    <table
+                        class="table table-light table-striped table-borderless table-hover align-middle caption-top">
+                        <caption>Details</caption>
+                        <tbody>
+                            <tr>
+                                <td>Owned By</td>
+                                <td>
+                                    <%= campground.author.username %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Location</td>
+                                <td>
+                                    <%= campground.location %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Created On</td>
+                                <td>
+                                    <%= campground.date.createdOn %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Price</td>
+                                <td>$
+                                    <%= campground.price %>/night
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Rating</td>
+                                <td class="pb-0">
+                                    <!-- <%= campground.rating.length===0?'Not rated':'' %> -->
+                                    <p class="starability-result pb-0"
+                                        data-rating="<%=Math.round(campground.rating.reduce((a,b)=>a+b,0)/campground.rating.length)%>">
+
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Views</td>
+                                <td>
+                                    <%=campground.views>0?campground.views:'No views'%>
+                                        <!-- <span><%=campground.rating.length%> </span> -->
+
+                                </td>
+                            </tr>
+                            <% if(campground.date.lastUpdated){ %>
+                                <tr>
+                                    <td>Last Updated</td>
+                                    <td>
+                                        <%= campground.date.lastUpdated %>
+                                    </td>
+                                </tr>
+                                <% } %>
+
+
+                                    <tr>
+                                        <td>Contact</td>
+                                        <td>
+                                            <a href="mailto:<%=campground.author.email%>">
+                                                <%= campground.author.email %>
+                                            </a>
+                                        </td>
+                                    </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="map-parent col-12 col-lg-6">
+                <div id='map' style='width: 100%; height: 350px;'></div>
+            </div>
+        </div>
+
+
+
+        <% if(currentUser && campground.author.equals(currentUser._id)){ %>
+            <div class="card-body">
+                <a href="/campgrounds/<%=campground._id%>/edit" class="card-link btn btn-warning">Edit</a>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    Delete
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Delete Campground</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <%= campground.title %> will be permanently deleted. Are you sure you want to continue ?
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <form class="d-inline" action="/campgrounds/<%=campground._id%>?_method=DELETE"
+                                    method="POST">
+                                    <button class="btn btn-danger">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+
+
+
+
+    </div>
+    <div class="container my-4">
+        <div class="image-mosaic">
+            <% campground.images.forEach((images,i)=>{ %>
+                <div data-image="<%=images.url%>" class="mos-card <%= i%6===0?'mos-card-tall mos-card-wide':(i%6===1?'':(i%6===2?'':(i%6===3?'mos-card-wide mos-card-tall':(i/6===4?'':''))))%>"
+                    style="background-image: url(<%=images.url%>)"></div>
+                <% })%>
+        </div>
+    </div>
+
+
+    <div class="container bg-light py-4 px-3 px-sm-5 my-4">
+        <% if(currentUser){ %>
+            <h2 class="px-1">Leave a review</h2>
+            <form action="/campgrounds/<%=campground._id%>/review" method="POST" novalidate class="mb-3 validated-form">
+                <div class="px-1 mb-0">
+                    <fieldset class="starability-grow">
+                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked
+                            aria-label="No rating." />
+                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                        <label for="first-rate1" title="Terrible">1 star</label>
+                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                        <label for="first-rate2" title="Not good">2 stars</label>
+                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                        <label for="first-rate3" title="Average">3 stars</label>
+                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                        <label for="first-rate4" title="Very good">4 stars</label>
+                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                        <label for="first-rate5" title="Amazing">5 stars</label>
+                    </fieldset>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label px-1" for="body">Review</label>
+                    <textarea class="form-control" name="review[body]" id="body" cols="30" required rows="3"></textarea>
+                    <div class="valid-feedback">
+                        Looks Good!
+                    </div>
+                </div>
+                <button class="btn btn-success">Submit</button>
+            </form>
+            <% } %>
+                <div class="px-1">
+                    <h3 class="">
+                        <%=campground.reviews.length%>
+                            <%=campground.reviews.length===1?'Comment':'Comments'%>
+                    </h3>
+                </div>
+                <% for(let review of campground.reviews) {%>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <%= review.author.username %>
+                            </h6>
+                            <p class="starability-result" data-rating="<%=review.rating%>">
+                                Rated
+                                <%=review.rating%>
+                            </p>
+                            <!-- <h6 class="card-subtitle mb-2 text-muted">
+                            By
+                            <%= review.author.username %>
+                        </h6> -->
+                            <p class="card-text">
+                                <%= review.body %>
+                            </p>
+                            <% if(currentUser && review.author.equals(currentUser._id)){ %>
+                                <form action="/campgrounds/<%=campground._id%>/review/<%=review._id%>?_method=DELETE"
+                                    method="POST">
+                                    <button class="btn btn-sm btn-danger">Delete</button>
+                                </form>
+                                <% } %>
+                        </div>
+                    </div>
+                    <% } %>
+    </div>
+    <div class="container">
+        <% const near=campgrounds.sort((f,s)=>
+            Math.sqrt((f.geometry.coordinates[0]-campground.geometry.coordinates[0])**2+(f.geometry.coordinates[1]-campground.geometry.coordinates[1])**2)-Math.sqrt((s.geometry.coordinates[0]-campground.geometry.coordinates[0])**2+(s.geometry.coordinates[1]-campground.geometry.coordinates[1])**2)
+            ) %>
+            <% if(near){ %>
+                <h2 class="lh-lg">Neighbouring Campgrounds</h2>
+                <div class="row">
+                    <%for(let n=1;n<5;n++){%>
+                        <% if(near[n]){ %>
+                            <div class=" col-sm-6 col-lg-3">
+                                <div
+                                    class="cardY mx-auto my-2 <%= n===1?'bg-success':(n===2?'bg-danger':(n===3?'bg-primary':'bg-warning')) %> text-white">
+                                    <a href="/campgrounds/<%=near[n]._id%>">
+                                        <img src="<%=near[n].images[0].url%>" />
+                                    </a>
+                                    <h4 class=" fs-5">
+                                        <a href="/campgrounds/<%=near[n]._id%>" class="text-white text-decoration-none">
+                                            <%=near[n].title%>
+                                        </a>
+                                    </h4>
+                                    <div class="focus-content">
+                                        <p>
+                                            <%=near[n].location%><br /> $
+                                                <%=near[n].price%>/night<br />
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <% } %>
+                                <% } %>
+                </div>
+                <% } %>
+    </div>
+
+    <%- include('../partials/loader') %>
+
+        <script>
+            const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+            const campGround = [parseFloat('<%=campground.geometry.coordinates[0]%>'), parseFloat('<%=campground.geometry.coordinates[1]%>')];
+            const campTitle = '<%=campground.title%>';
+        </script>
+        <script src="/javascripts/showPageMap.js"></script>

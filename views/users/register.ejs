@@ -1,0 +1,55 @@
+<% layout('layouts/boilerplate') %>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7 my-auto mx-auto">
+                <div class="card mt-5 ">
+                    <div class="row g-0">
+                        <div class="col-lg-5" style="background-image: url(https://images.unsplash.com/photo-1597947700031-fc9c8276dd6b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=334&q=80); background-size: cover;">
+
+                        </div>
+                        <div class="col-lg-7">
+                            <div class="card-body my-3 px-4">
+                                <h5 class="card-title mb-4  fs-1 text-center">Register</h5>
+                                <form action="/register" method="POST" novalidate class="validated-form">
+                                    <div class="mb-3">
+                                        <label for="form-label" for="username">Username</label>
+                                        <input type="text" class="form-control" name="username" id="username" autofocus required>
+                                        <div class="valid-feedback">
+                                            Looks Good!
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="form-label" for="email">Email</label>
+                                        <input type="email" class="form-control" name="email" id="email" required>
+                                        <div class="valid-feedback">
+                                            Looks Good!
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="form-label" for="password">Password</label>
+                                        <input type="password" class="form-control" name="password" id="password" required>
+                                        <div class="valid-feedback">
+                                            Looks Good!
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6 col-lg-12">
+                                            <div class="d-lg-grid  mb-3">
+                                                <button class="btn btn-success ">Register</button>
+                                            </div>
+                                </form>
+                                </div>
+                                <div class=" col-6 col-lg-12">
+                                    <h6 class="text-center d-inline">Already have an account? <a href="/login">Log in</a> </h6>
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>

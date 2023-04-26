@@ -1,0 +1,64 @@
+/* :root {
+    --dark-background-color: #f7f8f9;
+    --text-color: #000;
+    --background-color: #fafafa;
+}
+
+body {
+    background-color: var(--dark-background-color);
+    color: var(--text-color);
+}
+
+nav,
+.navbar-brand,
+.nav-link,
+footer {
+    background-color: var(--dark-background-color);
+    color: var(--text-color);
+}
+
+nav .container {
+     border-bottom: 0.5px solid var(--text-color);  comment
+    box-shadow: 1px 12px 2px 1px rgba(0, 0, 255, .2);
+}
+
+button {
+    background: transparent;
+    border: none;
+}
+
+[data-theme="dark"] {
+    --dark-background-color: #191a1f;
+    --text-color: #fff;
+    --background-color: #000000;
+} */
+
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+
+  *{
+      overflow: visible;
+  }
+div.cont-body{
+    overflow: hidden;
+}
+
+  .cont-body {
+    scrollbar-width: auto;
+    scrollbar-color: #12161b #ffffff;
+  }
+
+  /* Chrome, Edge, and Safari */
+  .cont-body::-webkit-scrollbar {
+    width: 16px;
+  }
+
+  .cont-body::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0);
+  }
+
+  .cont-body::-webkit-scrollbar-thumb {
+    background-color: #12161b;
+    border-radius: 13px;
+    border: 4px solid #ffffff;
+  }

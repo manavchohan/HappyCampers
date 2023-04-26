@@ -1,0 +1,95 @@
+<% layout('layouts/boilerplate') %>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/stylesheets/edit.css">
+
+    <h1 class="text-center my-4">Edit CampGround</h1>
+    <div class="container">
+        <form action="/campgrounds/<%=campground._id%>?_method=PUT" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" id="title" name="campground[title]" required value="<%=campground.title %>">
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="location" class="form-label">Location</label>
+                        <input type="text" class="form-control" id="location" name="campground[location]" required value="<%=campground.location %>">
+                        <div class="valid-feedback">
+                            Looks good!
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFileMultiple" class="form-label">Add images</label>
+                        <input class="form-control" type="file" id="formFileMultiple" name="image" multiple>
+                    </div>
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Camp Price</label>
+                        <div class="input-group">
+                            <span class="input-group-text" id="basic-addon1">$</span>
+                            <input type="text" class="form-control" id="price" placeholder="0.00" required name="campground[price]" value="<%=campground.price %>" aria-label=" price " aria-describedby="basic-addon1 ">
+                            <div class="valid-feedback">
+                                Looks good!
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 ">
+                        <label for="description " class="form-label ">Description</label>
+                        <textarea type="text " rows="4" class="form-control " id="description " required name="campground[description]"><%=campground.description %></textarea>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <!-- <div class="m-2" style="max-width: 100%;">
+                    <label for="dimg" class="form-label">Delete Images</label>
+                    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <% campground.images.forEach((img,i)=>{ %>
+                                <div class="carousel-item <%= i===0?'active':''%> ">
+                                    <img src="<%=img.url%>" class="d-block w-100" id="dimg" alt="">
+                                    <div class="carousel-footer  d-block" style="transform: translate(2px, -20px);z-index: 7;">
+                                        <div class="form-check-inline">
+                                            <input type="checkbox" name="deleteImages[]" value="<%=img.filename%>" id="image-<%=i%>">
+                                        </div>
+                                        <label for="image-<%=i%>"></label>
+                                    </div>
+                                </div>
+                                <% }) %>
+                        </div>
+                        <% if(campground.images.length>1){ %>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                  <span class="visually-hidden">Previous</span>
+                                </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                  <span class="visually-hidden">Next</span>
+                                </button>
+                            <% } %>
+                    </div>
+                  </div> -->
+                    <div class="row m-3 p-2 border rounded-3">
+                        <h3>Delete Images</h3>
+                        <% campground.images.forEach(function(img, i) {  %>
+                            <div class=" col-6 col-sm-4 col-lg-3 ">
+                                <div class="d-inline-block mb-2">
+                                    <input type="checkbox" id="image-<%=i%>" name="deleteImages[]" value="<%=img.filename%>">
+                                    <label class="labeL" for="image-<%=i%>">
+                                        <img src="<%=img.thumbnail %>" class="img-fluid " alt="">
+                                    </label>
+                                </div>
+                            </div>
+                            <% })%>
+                    </div>
+
+                    <div class="mb-3 d-flex flex-column flex-sm-row justify-content-evenly">
+                        <button class="btn btn-info m-1" style="color: white;">Update Campground</button>
+                        <a href="/campgrounds/<%= campground._id%>" class="btn btn-warning  m-1">Back To Campground</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+    </div>
+    </div>

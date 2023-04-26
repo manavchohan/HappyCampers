@@ -1,0 +1,208 @@
+<% layout('layouts/boilerplate') %>
+
+    <link rel="stylesheet" href="/stylesheets/index.css">
+
+    <div class="container">
+        <div class="camps bg-light" style="border: none;">
+            <h1 class="text-center ">
+                <%= check===2?`Search results for ${search}`:(check===0?'All Campgrounds':'Your Campgrounds') %>
+            </h1>
+            <% if(check!==2) {%>
+                <ol class="breadcrumb breadcrumb-dots m-0 mt-2 ">
+                    <div class="mx-auto">
+                        <li class="breadcrumb-item">
+                            <a href="/campgrounds/new" class="bText">
+                                <i class="fas fa-plus me-1"></i><span>NEW</span> </a>/
+                            <% if(!currentUser){ %>
+                                <a href="/" class="bText">
+                                    <i class="fas fa-home me-1"></i><span>Home</span> </a>
+                                <% } else { %>
+                                    <a data-bs-toggle="offcanvas" href="#profile" role="button" class="bText">
+                                        <i class="fas fa-user-circle me-1"></i><span>Profile</span> </a>
+                                    <% }%>
+                        </li>
+                    </div>
+                </ol>
+                <% } %>
+        </div>
+        <div class="d-md-flex justify-content-evenly">
+            <% if(campgrounds.length){ %>
+                <% if(currentUser) {%>
+                    <style>
+                        .counter-container {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            text-align: center;
+                            margin: 30px 50px;
+                        }
+                        
+                        .counter {
+                            font-size: 60px;
+                            margin-top: 10px;
+                        }
+                    </style>
+                    <div class="counter-container">
+                        <div class="counter" data-target="<%=campgrounds.length%>"></div>
+                        <span>Campgrounds</span>
+                    </div>
+                    <%const count = campgrounds.reduce(function(acc, curr) { return acc[curr.country] ? ++acc[curr.country] : acc[curr.country] = 1, acc }, {});  %>
+                        <div class="counter-container">
+                            <div class="counter" data-target="<%=Object.keys(count).length%>"></div>
+                            <span>Countries</span>
+                        </div>
+                        <% if(check===0){ %>
+                            <div class="counter-container">
+                                <div class="counter" data-target="<%=users.length%>"></div>
+                                <span>Users</span>
+                            </div>
+                            <%}%>
+                                <div class="counter-container">
+                                    <div class="counter" data-target="<%=(campgrounds.reduce((a,b)=>a+b.views,0))%>"></div>
+                                    <span>Views</span>
+                                </div>
+                                <% if(check===1){ %>
+                                    <div class="counter-container">
+                                        <div class="counter" data-target="<%=(campgrounds.reduce((a,b)=>a+b.reviews.length,0))%>"></div>
+                                        <span>Comments</span>
+                                    </div>
+                                    <% } %>
+                                        <script>
+                                            const counters = document.querySelectorAll('.counter')
+
+                                            counters.forEach(counter => {
+                                                counter.innerText = '0'
+
+                                                const updateCounter = () => {
+                                                    const target = +counter.getAttribute('data-target')
+                                                    const c = +counter.innerText
+
+                                                    const increment = target / 200
+
+                                                    if (c < target) {
+                                                        counter.innerText = `${Math.ceil(c + increment)}`
+                                                        setTimeout(updateCounter, (target + 10) / target)
+                                                    } else {
+                                                        counter.innerText = target
+                                                    }
+                                                }
+
+                                                updateCounter()
+                                            })
+                                        </script>
+                                        <% } %>
+        </div>
+        <div class="row">
+            <div class="col-md-9">
+                <% for( let i = 1; i<campgrounds.length/10+1; i++ ) { %>
+                    <section id="page<%=i%>" class="sections d-none">
+                        <% for (let j=1+((i-1)*10);j<((i-1)*10)+11;j++){%>
+                            <% if(campgrounds[campgrounds.length-j]){ %>
+                                <div class="card mb-4">
+                                    <div class="row">
+                                        <div class="col-lg-5 m-auto">
+                                            <a href="/campgrounds/<%=campgrounds[campgrounds.length-j]._id%>">
+                                                <figure class="hover-rotate">
+                                                    <img src="<%= campgrounds[campgrounds.length-j].images[0].allImg%> " loading="lazy" alt="" class="img-fluid  mt-4">
+                                                </figure>
+                                            </a>
+                                        </div>
+                                        <div class="col-lg-7 mt-0 mt-md-0">
+                                            <div class="card-body overflow-auto">
+                                                <a href="/campgrounds/<%=campgrounds[campgrounds.length-j]._id%>">
+                                                    <h1 class="card-title hover-underline-animation">
+                                                        <%= campgrounds[campgrounds.length-j].title %>
+                                                    </h1>
+                                                </a>
+                                                <br>
+                                                <p class="card-text badge bg-success mb-2 "> <i class="fas fa-map-marker-alt me-2 small fw-bold "></i> <small class=""><%= campgrounds[campgrounds.length-j].location %></small> </p>
+                                                <p class="card-text excerpt">
+                                                    <%= campgrounds[campgrounds.length-j].description %>
+                                                </p>
+                                                <div class="card-text">
+
+                                                    <img src="https://i0.wp.com/pngall.com/wp-content/uploads/5/Profile-Avatar-PNG.png" alt="" class="img_pro">
+                                                    <span class="mx-1 mt-1">By
+                                                        <%=campgrounds[campgrounds.length-j].author.username%></span>
+                                                    <span class="text-muted ml-3 mt-1"> <%= campgrounds[campgrounds.length-j].date.createdOn%></span>
+                                                </div>
+                                                <!-- <a href="/campgrounds/<%=campgrounds[campgrounds.length-j]._id%>" class="btn btn-primary">View</a> -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% } %>
+                                    <% }%>
+                    </section>
+                    <% } %>
+            </div>
+            <div class="col-md-3 mt-5 mt-lg-0 ml-lg-2">
+                <!-- <% const ar=(a)=> a.rating.reduce((a,b)=>a+b,0)%>
+                    <% const arr=(a)=> a.rating.length%>
+                        <% const v=campgrounds.sort((first,second)=>ar(second)/arr(second)-ar(first)/arr(first)) %> -->
+
+                <div class="" data-sticky data-margin-top="80" data-sticky-for="767">
+                    <div class="">
+                        <div class=" card-lg-scale position-relative overflow-hidden">
+                            <div class="text-center mb-3" style="background-color: white;">
+                                <div class="">
+                                    <h4 class="trend ">Highest Views</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <% const r=campgrounds.sort((first,second)=>second.views-first.views) %>
+                            <% for(let i=0;i<5;i++){ %>
+                                <% if(r[i]){ %>
+                                    <div class=" card-lg-scale position-relative overflow-hidden trend-parent">
+                                        <div class="text-center mb-3 trend-img" style="background-image:url(<%=r[i].images[0].url%>);">
+                                            <div class="bg-dark-overlay-4 p-3">
+                                                <a href="/campgrounds/<%=r[i]._id%>" class="stretched-link btn-link fw-bold text-white uuu">
+                                                    <%=r[i].title%>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <% } %>
+                                        <% } %>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <% if(campgrounds.length>10){ %>
+            <section aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <% for( let i = 1; i<campgrounds.length/10+1; i++ ) { %>
+                        <!-- <li class="page-item"><a class="page-link" href="#">Previous</a></li> -->
+                        <li class="page-item">
+                            <a class="page-link" href="#page<%=i%>">
+                                <%=i%>
+                            </a>
+                        </li>
+                        <!-- <li class="page-item"><a class="page-link" href="#">Next</a></li> -->
+                        <% } %>
+                </ul>
+            </section>
+            <% } %>
+    </div>
+    <div class="map-parent">
+    <div id="map" class="mt-2 mb-1" style="width: 100%; height: 600px;"></div>
+    </div>
+    <% } else{%>
+        <h2 class="text-center">No campgrounds found</h2>
+        <% } %>
+            <% if(currentUser){%>
+                <%- include('../partials/profileNav') %>
+                    <% } %>
+                    <%- include('../partials/loader') %>
+
+                        <script>
+                            const mapToken = '<%-process.env.MAPBOX_TOKEN%>';
+                            const numPages = parseInt('<%=campgrounds.length/10+1%>');
+                            const campgrounds = {
+                                features: <%- JSON.stringify(campgrounds) %>
+                            }
+                        </script>
+                        <script src="/javascripts/pagination.js"></script>
+
+                        <script src="/javascripts/clusterMap.js"></script>
